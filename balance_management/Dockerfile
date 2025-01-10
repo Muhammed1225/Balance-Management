@@ -1,14 +1,16 @@
-# Use a base Java image
 FROM openjdk:21-jdk-slim
-
-# Set the working directory
 WORKDIR /app
 
-# Copy the built JAR file into the container
+# Maven Wrapper dosyasının çalıştırılabilir olduğundan emin olun
+COPY mvnw .
+COPY .mvn .mvn
+RUN chmod +x mvnw
+
+# Bağımlılıkları yükleyin ve JAR dosyasını oluşturun
+RUN ./mvnw clean package
+
+# JAR dosyasını Docker konteynerine kopyalayın
 COPY target/balance_management-0.0.1-SNAPSHOT.jar app.jar
 
-# Expose the port your app runs on
-EXPOSE 8080
-
-# Run the application
-CMD ["java", "-jar", "app.jar"]
+# Uygulamanızı başlatın
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
