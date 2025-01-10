@@ -1,16 +1,12 @@
 FROM openjdk:21-jdk-slim
 WORKDIR /app
 
-# Maven Wrapper dosyasının çalıştırılabilir olduğundan emin olun
 COPY mvnw .
 COPY .mvn .mvn
-RUN chmod +x mvnw
+COPY pom.xml .
+RUN chmod +x mvnw && ./mvnw clean install
 
-# Bağımlılıkları yükleyin ve JAR dosyasını oluşturun
-RUN ./mvnw clean package
+COPY src ./src
+RUN ./mvnw package -DskipTests
 
-# JAR dosyasını Docker konteynerine kopyalayın
-COPY target/balance_management-0.0.1-SNAPSHOT.jar app.jar
-
-# Uygulamanızı başlatın
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/target/balance-management-0.0.1-SNAPSHOT.jar"]
