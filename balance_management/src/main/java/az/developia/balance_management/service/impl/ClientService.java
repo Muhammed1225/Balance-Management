@@ -81,7 +81,7 @@ public class ClientService implements ClientInter {
     }
 
     private void sendEmail(String to, Integer pin) {
-        String verificationLink = "http://localhost:8080/clients/verify-email?token=" + pin;
+        String verificationLink = "https://balance-management-production.up.railway.app/clients/verify-email?token=" + pin;
         String message = "Please verify your email by clicking the following link: " + verificationLink;
         emailService.sendEmail(to, "Verify Your Email!", message);
     }
